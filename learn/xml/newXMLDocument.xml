@@ -14,7 +14,7 @@
             <officiant firstname="Михаил" secondname="ivanov"/>
             <item cost="200" name="Макароны из теста"/>
             <item cost="80" name="Кетчуп томатный"/>
-            <totalcost>300</totalcost>
+            <totalcost>280</totalcost>
         </order>
     </date>
     <date day="3" month="10" year="2016">
