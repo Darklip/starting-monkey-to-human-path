@@ -10,6 +10,9 @@ import javax.xml.parsers.DocumentBuilder;
 import javax.xml.parsers.ParserConfigurationException;
 
 import org.w3c.dom.*;
+import org.w3c.dom.ls.DOMImplementationLS;
+import org.w3c.dom.ls.LSOutput;
+import org.w3c.dom.ls.LSSerializer;
 import org.xml.sax.SAXException;
 
 public class XmlTask {
@@ -31,6 +34,17 @@ public class XmlTask {
         document = dBuilder.parse(fXmlFile);
     }
     
+    private void rewriteDocument() throws IOException {
+        DOMImplementationLS domImplementationLS =
+                (DOMImplementationLS) document.getImplementation().getFeature("LS", "3.0");
+        LSOutput lsOutput = domImplementationLS.createLSOutput();
+        FileOutputStream outputStream = new FileOutputStream(path);
+        lsOutput.setByteStream(outputStream);
+        LSSerializer lsSerializer = domImplementationLS.createLSSerializer();
+        lsSerializer.write(document, lsOutput);
+        outputStream.close();
+    }
+    
     /**
      * Возвращает суммарную выручку заданного официанта в заданный день.
      * @param officiantSecondName Имя официанта
@@ -39,7 +53,7 @@ public class XmlTask {
      */
     public int earningsTotal(String officiantSecondName, Calendar calendar) {
         int result = 0;
-        
+        // dummy
         return result;
     }
     
@@ -48,20 +62,33 @@ public class XmlTask {
      * @param calendar Дата в формате гггг-мм-дд
      */
     public void removeDay(Calendar calendar) {
-        
+        // dummy
     }
     
     /**
-     * Изменяет имя и фамилию официанта во всех днях и записывает результат. 
+     * Изменяет имя и фамилию официанта во всех днях и записывает результат 
      * в этот же xml-файл
      * @param oldFirstName Текущее имя официанта
      * @param oldSecondName Текущая фамилия официанта
      * @param newFirstName Новое имя официанта
      * @param newSecondName Новая фамилия официанта
+     * @throws java.io.IOException
      */
     public void changeOfficiantName(String oldFirstName, String oldSecondName, 
-            String newFirstName, String newSecondName) {
+            String newFirstName, String newSecondName) throws IOException {
+        NodeList officiantList = document.getElementsByTagName("officiant");
         
+        for (int i = 0; i < officiantList.getLength(); i++) {
+            NamedNodeMap officiantAttributes = officiantList.item(i).getAttributes();
+            
+            if ((officiantAttributes.item(0).getNodeValue().equals(oldFirstName)) &&
+                    (officiantAttributes.item(1).getNodeValue().equals(oldSecondName))) {
+                officiantAttributes.item(0).setNodeValue(newFirstName);
+                officiantAttributes.item(1).setNodeValue(newSecondName);
+            }
+        }
+        
+        rewriteDocument();
     }
     
 }
