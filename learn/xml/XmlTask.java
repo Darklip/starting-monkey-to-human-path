@@ -65,9 +65,22 @@ public class XmlTask {
     /**
      * Удаляет информацию по заданному дню.
      * @param calendar Дата в формате дд-мм-гггг
+     * @throws java.io.IOException
      */
-    public void removeDay(Calendar calendar) {
-        // dummy
+    public void removeDay(Calendar calendar) throws IOException {
+        NodeList dateList = document.getElementsByTagName("date");
+        int datesAmount = dateList.getLength();
+        NamedNodeMap dateAttributes;
+        for (int i = 0; i < datesAmount; i++) {
+            dateAttributes = dateList.item(i).getAttributes();
+            if ((Integer.valueOf(dateAttributes.getNamedItem("day").getNodeValue()) == calendar.get(Calendar.DAY_OF_MONTH)) &&
+                    (Integer.valueOf(dateAttributes.getNamedItem("month").getNodeValue()) == (calendar.get(Calendar.MONTH)+1)) &&
+                    (Integer.valueOf(dateAttributes.getNamedItem("year").getNodeValue()) == calendar.get(Calendar.YEAR))) {
+                dateList.item(i).getParentNode().removeChild(dateList.item(i));
+                break;
+            }
+        }
+        rewriteDocument();
     }
     
     /**
