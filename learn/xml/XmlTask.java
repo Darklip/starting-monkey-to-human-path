@@ -22,7 +22,12 @@ public class XmlTask {
     
     public XmlTask()
             throws ParserConfigurationException, IOException, SAXException {
-        path = "src/RPIS41/Lipatkin/wdad/learn/xml/newXMLDocument.xml";
+        this("src/RPIS41/Lipatkin/wdad/learn/xml/newXMLDocument.xml");
+    }
+    
+    public XmlTask(String path)
+            throws ParserConfigurationException, IOException, SAXException {
+        this.path = path;
         generateDocument();
     }
     
@@ -48,7 +53,7 @@ public class XmlTask {
     /**
      * Возвращает суммарную выручку заданного официанта в заданный день.
      * @param officiantSecondName Имя официанта
-     * @param calendar Дата в формате гггг-мм-дд
+     * @param calendar Дата в формате дд-мм-гггг
      * @return
      */
     public int earningsTotal(String officiantSecondName, Calendar calendar) {
@@ -59,7 +64,7 @@ public class XmlTask {
     
     /**
      * Удаляет информацию по заданному дню.
-     * @param calendar Дата в формате гггг-мм-дд
+     * @param calendar Дата в формате дд-мм-гггг
      */
     public void removeDay(Calendar calendar) {
         // dummy
@@ -67,7 +72,7 @@ public class XmlTask {
     
     /**
      * Изменяет имя и фамилию официанта во всех днях и записывает результат 
-     * в этот же xml-файл
+     * в этот же xml-файл.
      * @param oldFirstName Текущее имя официанта
      * @param oldSecondName Текущая фамилия официанта
      * @param newFirstName Новое имя официанта
@@ -80,14 +85,12 @@ public class XmlTask {
         
         for (int i = 0; i < officiantList.getLength(); i++) {
             NamedNodeMap officiantAttributes = officiantList.item(i).getAttributes();
-            
-            if ((officiantAttributes.item(0).getNodeValue().equals(oldFirstName)) &&
-                    (officiantAttributes.item(1).getNodeValue().equals(oldSecondName))) {
-                officiantAttributes.item(0).setNodeValue(newFirstName);
-                officiantAttributes.item(1).setNodeValue(newSecondName);
+            if ((officiantAttributes.getNamedItem("firstname").getNodeValue().equals(oldFirstName)) &&
+                    (officiantAttributes.getNamedItem("secondname").getNodeValue().equals(oldSecondName))) {
+                officiantAttributes.getNamedItem("firstname").setNodeValue(newFirstName);
+                officiantAttributes.getNamedItem("secondname").setNodeValue(newSecondName);
             }
         }
-        
         rewriteDocument();
     }
     
