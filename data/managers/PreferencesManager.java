@@ -70,9 +70,9 @@ public class PreferencesManager {
         return nodeList.item(0).getTextContent();
     }
 
-    public void setRegistryAddress(String s) throws IOException {
+    public void setRegistryAddress(String registryAdress) throws IOException {
         NodeList nodeList = document.getElementsByTagName("registryaddress");
-        nodeList.item(0).setTextContent(s);
+        nodeList.item(0).setTextContent(registryAdress);
         rewriteDocument();
     }
 
@@ -92,9 +92,9 @@ public class PreferencesManager {
         return nodeList.item(0).getTextContent();
     }
 
-    public void setPolicyPath(String s) throws IOException {
+    public void setPolicyPath(String policyPath) throws IOException {
         NodeList nodeList = document.getElementsByTagName("policypath");
-        nodeList.item(0).setTextContent(s);
+        nodeList.item(0).setTextContent(policyPath);
         rewriteDocument();
     }
 
