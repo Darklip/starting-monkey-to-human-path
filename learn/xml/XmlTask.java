@@ -37,6 +37,7 @@ public class XmlTask {
         DocumentBuilderFactory dbFactory = DocumentBuilderFactory.newInstance();
         DocumentBuilder dBuilder = dbFactory.newDocumentBuilder();
         document = dBuilder.parse(fXmlFile);
+        fixTotalCost();
     }
     
     private void rewriteDocument() throws IOException {
@@ -49,6 +50,36 @@ public class XmlTask {
         lsSerializer.write(document, lsOutput);
         outputStream.close();
     }
+    
+    private void fixTotalCost() throws IOException {
+        NodeList orderList = document.getElementsByTagName("order");
+        NodeList itemList;
+        NodeList totalCostList;
+        int totalCost;
+        boolean isTotalCostFound;
+        
+        for (int i = 0; i < orderList.getLength(); i++) {
+            itemList = ((Element)orderList.item(i)).getElementsByTagName("item");
+            totalCostList = ((Element)orderList.item(i)).getElementsByTagName("totalcost");
+            isTotalCostFound = false;
+            totalCost = 0;
+            for (int j = 0; j < itemList.getLength(); j++) {
+                totalCost += Integer.parseInt(itemList.item(j).getAttributes().getNamedItem("cost").getNodeValue());
+            }
+            if (totalCostList.getLength() > 0) {
+                isTotalCostFound = true;
+                totalCostList.item(0).setTextContent(String.valueOf(totalCost));
+                rewriteDocument();
+            }
+            if (!isTotalCostFound) {
+                Element totalCostElement = document.createElement("totalcost");
+                totalCostElement.setTextContent(String.valueOf(totalCost));
+                orderList.item(i).appendChild(totalCostElement);
+                rewriteDocument();
+            }
+        }
+    }
+    
     
     /**
      * Возвращает суммарную выручку заданного официанта в заданный день.
