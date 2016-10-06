@@ -58,7 +58,33 @@ public class XmlTask {
      */
     public int earningsTotal(String officiantSecondName, Calendar calendar) {
         int result = 0;
-        // dummy
+        NodeList dateList = document.getElementsByTagName("date");
+        NamedNodeMap dateAttributes;
+        NodeList orderList;
+        NodeList orderNodesList;
+        boolean isOfficiantFound = false;
+        
+        for (int i = 0; i < dateList.getLength(); i++) {
+            dateAttributes = dateList.item(i).getAttributes();
+            if ((Integer.valueOf(dateAttributes.getNamedItem("day").getNodeValue()) == calendar.get(Calendar.DAY_OF_MONTH)) &&
+                    (Integer.valueOf(dateAttributes.getNamedItem("month").getNodeValue()) == (calendar.get(Calendar.MONTH)+1)) &&
+                    (Integer.valueOf(dateAttributes.getNamedItem("year").getNodeValue()) == calendar.get(Calendar.YEAR))) {
+                orderList = ((Element)dateList.item(i)).getElementsByTagName("order");
+                for (int j = 0; j < orderList.getLength(); j++) {
+                    orderNodesList = orderList.item(j).getChildNodes();
+                    for (int k = 0; k < orderNodesList.getLength(); k++) {
+                        if ((orderNodesList.item(k).getNodeName().equals("officiant")) &&
+                                orderNodesList.item(k).getAttributes().getNamedItem("secondname").getNodeValue().equals(officiantSecondName)) {
+                            isOfficiantFound = true;
+                        }
+                        if ((orderNodesList.item(k).getNodeName().equals("totalcost")) && isOfficiantFound) {
+                            result += Integer.parseInt(orderNodesList.item(k).getTextContent());
+                        }
+                    }
+                }
+                break;
+            }
+        }
         return result;
     }
     
