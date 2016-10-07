@@ -3,6 +3,7 @@ package RPIS41.Lipatkin.wdad.data.managers;
 import java.io.File;
 import java.io.FileOutputStream;
 import java.io.IOException;
+import java.util.Properties;
 
 import javax.xml.parsers.DocumentBuilder;
 import javax.xml.parsers.DocumentBuilderFactory;
@@ -63,6 +64,33 @@ public class PreferencesManager {
         int lastIndex = keys.length - 1;
         NodeList nodeList = document.getElementsByTagName(keys[lastIndex]);
         return nodeList.item(0).getTextContent();
+    }
+    
+//    public void setProperties(Properties prop) {
+//        
+//    }
+//    
+//    public Properties getProperties() {
+//        
+//    }
+    
+    public void addBindedObject(String name, String className) throws IOException {
+        Element bindedObjectNode = document.createElement("bindedobject");
+        bindedObjectNode.setAttribute("name", name);
+        bindedObjectNode.setAttribute("class", className);
+        document.getElementsByTagName("server").item(0).appendChild(bindedObjectNode);
+        updateDocument();
+    }
+    
+    public void removeBindedObject(String name) throws IOException {
+        NodeList bindedObjectList = document.getElementsByTagName("bindedobject");
+        
+        for (int i = 0; i < bindedObjectList.getLength(); i++) {
+            if (name.equals(bindedObjectList.item(i).getAttributes().getNamedItem("name").getNodeValue())) {
+                bindedObjectList.item(i).getParentNode().removeChild(bindedObjectList.item(i));
+            }
+        }
+        updateDocument();
     }
 
     @Deprecated

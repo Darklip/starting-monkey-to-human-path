@@ -12,6 +12,8 @@ public class testPreferencesManager {
             
             System.out.println(pm.getProperty("appconfig.rmi.server.registry.registryaddress"));
             
+            pm.addBindedObject("Playlist", "playList");
+            
         } catch (ParserConfigurationException | IOException | SAXException ex) {
             System.err.println(ex.getMessage());
         }
