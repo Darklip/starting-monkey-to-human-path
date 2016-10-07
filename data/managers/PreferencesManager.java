@@ -49,12 +49,29 @@ public class PreferencesManager {
         lsSerializer.write(document, lsOutput);
         outputStream.close();
     }
+    
+    public void setProperty(String key, String value) throws IOException {
+        String[] keys = key.split("\\.");
+        int lastIndex = keys.length - 1;
+        NodeList nodeList = document.getElementsByTagName(keys[lastIndex]);
+        nodeList.item(0).setTextContent(value);
+        rewriteDocument();
+    }
+    
+    public String getProperty(String key) {
+        String[] keys = key.split("\\.");
+        int lastIndex = keys.length - 1;
+        NodeList nodeList = document.getElementsByTagName(keys[lastIndex]);
+        return nodeList.item(0).getTextContent();
+    }
 
+    @Deprecated
     public boolean getCreateRegistry() {
         NodeList nodeList = document.getElementsByTagName("createregistry");
         return nodeList.item(0).getTextContent().equals("yes");
     }
 
+    @Deprecated
     public void setCreateRegistry(boolean createRegistry) throws IOException {
         NodeList nodeList = document.getElementsByTagName("createregistry");
         if (createRegistry) {
@@ -65,44 +82,52 @@ public class PreferencesManager {
         rewriteDocument();
     }
 
+    @Deprecated
     public String getRegistryAddress() {
         NodeList nodeList = document.getElementsByTagName("registryaddress");
         return nodeList.item(0).getTextContent();
     }
 
+    @Deprecated
     public void setRegistryAddress(String registryAdress) throws IOException {
         NodeList nodeList = document.getElementsByTagName("registryaddress");
         nodeList.item(0).setTextContent(registryAdress);
         rewriteDocument();
     }
 
+    @Deprecated
     public int getRegistryPort() {
         NodeList nodeList = document.getElementsByTagName("registryport");
         return Integer.parseInt(nodeList.item(0).getTextContent());
     }
 
+    @Deprecated
     public void setRegistryPort(int registryPort) throws IOException {
         NodeList nodeList = document.getElementsByTagName("registryport");
         nodeList.item(0).setTextContent(String.valueOf(registryPort));
         rewriteDocument();
     }
 
+    @Deprecated
     public String getPolicyPath() {
         NodeList nodeList = document.getElementsByTagName("policypath");
         return nodeList.item(0).getTextContent();
     }
 
+    @Deprecated
     public void setPolicyPath(String policyPath) throws IOException {
         NodeList nodeList = document.getElementsByTagName("policypath");
         nodeList.item(0).setTextContent(policyPath);
         rewriteDocument();
     }
 
+    @Deprecated
     public boolean getUseCodeBaseOnly() {
         NodeList nodeList = document.getElementsByTagName("usecodebaseonly");
         return nodeList.item(0).getTextContent().equals("yes");
     }
 
+    @Deprecated
     public void setUseCodeBaseOnly(boolean useCodeBaseOnly) throws IOException {
         NodeList nodeList = document.getElementsByTagName("usecodebaseonly");
         if (useCodeBaseOnly) {
@@ -113,11 +138,13 @@ public class PreferencesManager {
         rewriteDocument();
     }
 
+    @Deprecated
     public String getClassProvider() {
         NodeList nodeList = document.getElementsByTagName("classprovider");
         return nodeList.item(0).getTextContent();
     }
 
+    @Deprecated
     public void setClassProvider(String classproviderURL) throws IOException {
         NodeList nodeList = document.getElementsByTagName("classprovider");
         nodeList.item(0).setTextContent(classproviderURL);
