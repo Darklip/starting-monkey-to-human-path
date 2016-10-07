@@ -40,7 +40,7 @@ public class XmlTask {
         fixTotalCost();
     }
     
-    private void rewriteDocument() throws IOException {
+    private void updateDocument() throws IOException {
         DOMImplementationLS domImplementationLS =
                 (DOMImplementationLS) document.getImplementation().getFeature("LS", "3.0");
         LSOutput lsOutput = domImplementationLS.createLSOutput();
@@ -69,17 +69,16 @@ public class XmlTask {
             if (totalCostList.getLength() > 0) {
                 isTotalCostFound = true;
                 totalCostList.item(0).setTextContent(String.valueOf(totalCost));
-                rewriteDocument();
+                updateDocument();
             }
             if (!isTotalCostFound) {
                 Element totalCostElement = document.createElement("totalcost");
                 totalCostElement.setTextContent(String.valueOf(totalCost));
                 orderList.item(i).appendChild(totalCostElement);
-                rewriteDocument();
+                updateDocument();
             }
         }
     }
-    
     
     /**
      * Возвращает суммарную выручку заданного официанта в заданный день.
@@ -137,7 +136,7 @@ public class XmlTask {
                 break;
             }
         }
-        rewriteDocument();
+        updateDocument();
     }
     
     /**
@@ -161,7 +160,6 @@ public class XmlTask {
                 officiantAttributes.getNamedItem("secondname").setNodeValue(newSecondName);
             }
         }
-        rewriteDocument();
+        updateDocument();
     }
-    
 }
