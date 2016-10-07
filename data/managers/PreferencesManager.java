@@ -17,7 +17,7 @@ import org.xml.sax.SAXException;
 public class PreferencesManager {
 
     private static PreferencesManager instance;
-    private static String path = "src/RPIS41/Lipatkin/wdad/resources/configuration/appconfig.xml";
+    private static final String PATH = "src/RPIS41/Lipatkin/wdad/resources/configuration/appconfig.xml";
     private Document document;
 
     private PreferencesManager() throws ParserConfigurationException, IOException, SAXException {
@@ -33,17 +33,17 @@ public class PreferencesManager {
 
     private void generateDocument()
             throws ParserConfigurationException, IOException, SAXException {
-        File fXmlFile = new File(path);
+        File fXmlFile = new File(PATH);
         DocumentBuilderFactory dbFactory = DocumentBuilderFactory.newInstance();
         DocumentBuilder dBuilder = dbFactory.newDocumentBuilder();
         document = dBuilder.parse(fXmlFile);
     }
 
-    private void rewriteDocument() throws IOException {
+    private void updateDocument() throws IOException {
         DOMImplementationLS domImplementationLS
                 = (DOMImplementationLS) document.getImplementation().getFeature("LS", "3.0");
         LSOutput lsOutput = domImplementationLS.createLSOutput();
-        FileOutputStream outputStream = new FileOutputStream(path);
+        FileOutputStream outputStream = new FileOutputStream(PATH);
         lsOutput.setByteStream(outputStream);
         LSSerializer lsSerializer = domImplementationLS.createLSSerializer();
         lsSerializer.write(document, lsOutput);
@@ -62,7 +62,7 @@ public class PreferencesManager {
         } else {
             nodeList.item(0).setTextContent("no");
         }
-        rewriteDocument();
+        updateDocument();
     }
 
     public String getRegistryAddress() {
@@ -73,7 +73,7 @@ public class PreferencesManager {
     public void setRegistryAddress(String registryAdress) throws IOException {
         NodeList nodeList = document.getElementsByTagName("registryaddress");
         nodeList.item(0).setTextContent(registryAdress);
-        rewriteDocument();
+        updateDocument();
     }
 
     public int getRegistryPort() {
@@ -84,7 +84,7 @@ public class PreferencesManager {
     public void setRegistryPort(int registryPort) throws IOException {
         NodeList nodeList = document.getElementsByTagName("registryport");
         nodeList.item(0).setTextContent(String.valueOf(registryPort));
-        rewriteDocument();
+        updateDocument();
     }
 
     public String getPolicyPath() {
@@ -95,7 +95,7 @@ public class PreferencesManager {
     public void setPolicyPath(String policyPath) throws IOException {
         NodeList nodeList = document.getElementsByTagName("policypath");
         nodeList.item(0).setTextContent(policyPath);
-        rewriteDocument();
+        updateDocument();
     }
 
     public boolean getUseCodeBaseOnly() {
@@ -110,7 +110,7 @@ public class PreferencesManager {
         } else {
             nodeList.item(0).setTextContent("no");
         }
-        rewriteDocument();
+        updateDocument();
     }
 
     public String getClassProvider() {
@@ -121,7 +121,6 @@ public class PreferencesManager {
     public void setClassProvider(String classproviderURL) throws IOException {
         NodeList nodeList = document.getElementsByTagName("classprovider");
         nodeList.item(0).setTextContent(classproviderURL);
-        rewriteDocument();
+        updateDocument();
     }
-
 }
