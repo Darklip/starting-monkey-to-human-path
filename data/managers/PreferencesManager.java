@@ -52,27 +52,31 @@ public class PreferencesManager {
     }
 
     public void setProperty(String key, String value) throws IOException {
-        String[] keys = key.split("\\.");
-        int lastIndex = keys.length - 1;
-        NodeList nodeList = document.getElementsByTagName(keys[lastIndex]);
+        String[] tags = key.split("\\.");
+        int lastIndex = tags.length - 1;
+        NodeList nodeList = document.getElementsByTagName(tags[lastIndex]);
         nodeList.item(0).setTextContent(value);
         updateDocument();
     }
 
     public String getProperty(String key) {
-        String[] keys = key.split("\\.");
-        int lastIndex = keys.length - 1;
-        NodeList nodeList = document.getElementsByTagName(keys[lastIndex]);
+        String[] tags = key.split("\\.");
+        int lastIndex = tags.length - 1;
+        NodeList nodeList = document.getElementsByTagName(tags[lastIndex]);
         return nodeList.item(0).getTextContent();
     }
     
-//    public void setProperties(Properties prop) {
-//        
-//    }
-//    
-//    public Properties getProperties() {
-//        
-//    }
+    public void setProperties(Properties prop) throws IOException {
+        for (String key : prop.stringPropertyNames()) {
+            setProperty(key, prop.getProperty(key));
+        }
+    }
+    
+    public Properties getProperties() {
+        Properties props = new Properties();
+                
+        return props;
+    }
     
     public void addBindedObject(String name, String className) throws IOException {
         Element bindedObjectNode = document.createElement("bindedobject");
