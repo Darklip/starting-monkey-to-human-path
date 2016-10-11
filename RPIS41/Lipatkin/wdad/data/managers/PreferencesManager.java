@@ -8,6 +8,7 @@ import java.util.Properties;
 import javax.xml.parsers.DocumentBuilder;
 import javax.xml.parsers.DocumentBuilderFactory;
 import javax.xml.parsers.ParserConfigurationException;
+import javax.xml.xpath.*;
 
 import org.w3c.dom.*;
 import org.w3c.dom.ls.DOMImplementationLS;
@@ -50,6 +51,15 @@ public class PreferencesManager {
         lsSerializer.write(document, lsOutput);
         outputStream.close();
     }
+    
+    private static String getNodePath(Node node) {
+        Node parent = node.getParentNode();
+        
+        if (parent == null || parent.getNodeName().equals("#document")) {
+            return node.getNodeName();
+        }
+        return getNodePath(parent) + '.' + node.getNodeName();
+    }
 
     public void setProperty(String key, String value) throws IOException {
         String[] tags = key.split("\\.");
@@ -73,8 +83,21 @@ public class PreferencesManager {
     }
     
     public Properties getProperties() {
-        Properties props = new Properties();
-                
+        Properties props = new Properties();String key, value;
+        XPath xPath = XPathFactory.newInstance().newXPath();
+        String expression = "//*[not(*)]";  // http://stackoverflow.com/questions/3926589/how-to-select-all-leaf-nodes-using-xpath-expression
+        
+        try {
+            NodeList nodeList = (NodeList) xPath.compile(expression).evaluate(document, XPathConstants.NODESET);
+            
+            for (int i = 0; i < nodeList.getLength(); i++) {
+                key = getNodePath(nodeList.item(i));
+                value = getProperty(key);
+                props.put(key, value);
+            }
+        } catch (XPathExpressionException xPathExpressionException) {
+            xPathExpressionException.getStackTrace();
+        }
         return props;
     }
     

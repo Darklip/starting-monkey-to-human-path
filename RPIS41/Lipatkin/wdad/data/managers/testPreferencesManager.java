@@ -19,15 +19,18 @@ public class testPreferencesManager {
             System.out.println(pm.getProperty(PreferencesConstantManager.USE_CODE_BASE_ONLY));
             
             Properties p = new Properties();
-            p.put(PreferencesConstantManager.REGISTRY_ADDRESS, "mastefanov.com");
-            p.put(PreferencesConstantManager.REGISTRY_PORT, "9001");
-            p.put(PreferencesConstantManager.USE_CODE_BASE_ONLY, "yes");
-            pm.setProperties(p);
-            System.out.println(pm.getProperty(PreferencesConstantManager.REGISTRY_ADDRESS));
-            System.out.println(pm.getProperty(PreferencesConstantManager.REGISTRY_PORT));
-            System.out.println(pm.getProperty(PreferencesConstantManager.USE_CODE_BASE_ONLY));
+//            p.put(PreferencesConstantManager.REGISTRY_ADDRESS, "mastefanov.com");
+//            p.put(PreferencesConstantManager.REGISTRY_PORT, "9001");
+//            p.put(PreferencesConstantManager.USE_CODE_BASE_ONLY, "yes");
+//            pm.setProperties(p);
+//            System.out.println(pm.getProperty(PreferencesConstantManager.REGISTRY_ADDRESS));
+//            System.out.println(pm.getProperty(PreferencesConstantManager.REGISTRY_PORT));
+//            System.out.println(pm.getProperty(PreferencesConstantManager.USE_CODE_BASE_ONLY));
             
             //pm.addBindedObject("Playlist", "playList");
+            
+            p = pm.getProperties();
+            p.list(System.out);
             
         } catch (ParserConfigurationException | IOException | SAXException ex) {
             System.err.println(ex.getMessage());
