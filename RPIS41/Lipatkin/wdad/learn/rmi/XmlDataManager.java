@@ -1,18 +1,19 @@
 package RPIS41.Lipatkin.wdad.learn.rmi;
 
-import java.util.Date;
+import java.io.IOException;
+import java.util.Calendar;
 import java.util.List;
 
 public interface XmlDataManager {
     
-    public int earningsTotal(Officiant officiant, Date date);
+    public int earningsTotal(Officiant officiant, Calendar calendar);
     
-    public void removeDay(Date date);
+    public void removeDay(Calendar calendar) throws IOException ;
     
-    public void changeOfficiantName(Officiant oldOfficiant, Officiant newOfficiant);
+    public void changeOfficiantName(Officiant oldOfficiant, Officiant newOfficiant) throws IOException ;
     
-    public List<Order> getOrders(Date date);
+    public List<Order> getOrders(Calendar calendar);
     
-    public Date lastOfficiantWorkDate(Officiant officiant);
+    public Calendar lastOfficiantWorkDate(Officiant officiant);
     
 }
