@@ -1,6 +1,5 @@
 package RPIS41.Lipatkin.wdad.learn.xml;
 
-import RPIS41.Lipatkin.wdad.learn.rmi.NoSuchOfficiantException;
 import java.io.File;
 import java.io.FileOutputStream;
 import java.io.IOException;
@@ -164,8 +163,7 @@ public class XmlTask {
         updateDocument();
     }
     
-    public Calendar lastOfficiantWorkDate(String firstName, String secondName)
-            throws NoSuchOfficiantException {
+    public Calendar lastOfficiantWorkDate(String firstName, String secondName) {
         Calendar calendar = Calendar.getInstance();
         NodeList officiantList = document.getElementsByTagName("officiant");
         NamedNodeMap officiantAttributes;

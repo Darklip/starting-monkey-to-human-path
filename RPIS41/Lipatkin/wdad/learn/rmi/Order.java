@@ -5,7 +5,7 @@ import java.util.List;
 
 public class Order implements Serializable {
     private final Officiant officiant;
-    private List<Item> items;
+    private final List<Item> items;
     
     public Order(Officiant officiant, List<Item> items) {
         this.officiant = officiant;
