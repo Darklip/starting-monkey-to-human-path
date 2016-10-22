@@ -1,10 +1,14 @@
 package RPIS41.Lipatkin.wdad.learn.rmi;
 
 import java.io.IOException;
+import java.io.Serializable;
+
+import java.rmi.Remote;
+
 import java.util.Calendar;
 import java.util.List;
 
-public interface XmlDataManager {
+public interface XmlDataManager extends Remote, Serializable {
     
     public int earningsTotal(Officiant officiant, Calendar calendar);
     

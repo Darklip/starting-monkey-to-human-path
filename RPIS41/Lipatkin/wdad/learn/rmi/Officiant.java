@@ -1,6 +1,8 @@
 package RPIS41.Lipatkin.wdad.learn.rmi;
 
-public class Officiant {
+import java.io.Serializable;
+
+public class Officiant implements Serializable {
     private final String firstName;
     private final String secondName;
     

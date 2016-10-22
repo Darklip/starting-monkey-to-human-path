@@ -1,8 +1,9 @@
 package RPIS41.Lipatkin.wdad.learn.rmi;
 
+import java.io.Serializable;
 import java.util.List;
 
-public class Order {
+public class Order implements Serializable {
     private final Officiant officiant;
     private List<Item> items;
     

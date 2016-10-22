@@ -9,7 +9,7 @@ import java.util.List;
 import java.rmi.Remote;
 
 
-public class XmlDataManagerImpl implements Remote, XmlDataManager {
+public class XmlDataManagerImpl implements XmlDataManager {
     private XmlTask xmlTask;
 
     @Override
