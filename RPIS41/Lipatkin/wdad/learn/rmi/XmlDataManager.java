@@ -18,6 +18,6 @@ public interface XmlDataManager extends Remote, Serializable {
     
     public List<Order> getOrders(Calendar calendar);
     
-    public Calendar lastOfficiantWorkDate(Officiant officiant);
+    public Calendar lastOfficiantWorkDate(Officiant officiant) throws NoSuchOfficiantException;
     
 }

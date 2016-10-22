@@ -1,5 +1,6 @@
 package RPIS41.Lipatkin.wdad.learn.xml;
 
+import RPIS41.Lipatkin.wdad.learn.rmi.NoSuchOfficiantException;
 import java.io.File;
 import java.io.FileOutputStream;
 import java.io.IOException;
@@ -161,5 +162,28 @@ public class XmlTask {
             }
         }
         updateDocument();
+    }
+    
+    public Calendar lastOfficiantWorkDate(String firstName, String secondName)
+            throws NoSuchOfficiantException {
+        Calendar calendar = Calendar.getInstance();
+        NodeList officiantList = document.getElementsByTagName("officiant");
+        NamedNodeMap officiantAttributes;
+        
+        for (int i = officiantList.getLength() - 1; i >= 0; i--) {
+            officiantAttributes = officiantList.item(i).getAttributes();
+            if ((officiantAttributes.getNamedItem("firstname").getNodeValue().equals(firstName)) &&
+                    (officiantAttributes.getNamedItem("secondname").getNodeValue().equals(secondName))) {
+                Node date = officiantList.item(i).getParentNode().getParentNode();
+                NamedNodeMap dateAttributes = date.getAttributes();
+                calendar.set(
+                        Integer.parseInt(dateAttributes.getNamedItem("year").getTextContent()),
+                        Integer.parseInt(dateAttributes.getNamedItem("month").getTextContent()),
+                        Integer.parseInt(dateAttributes.getNamedItem("day").getTextContent())
+                );
+                return calendar;
+            }
+        }
+        return null;
     }
 }

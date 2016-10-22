@@ -6,9 +6,6 @@ import java.io.IOException;
 import java.util.Calendar;
 import java.util.List;
 
-import java.rmi.Remote;
-
-
 public class XmlDataManagerImpl implements XmlDataManager {
     private XmlTask xmlTask;
 
@@ -34,8 +31,10 @@ public class XmlDataManagerImpl implements XmlDataManager {
     }
 
     @Override
-    public Calendar lastOfficiantWorkDate(Officiant officiant) {
-        throw new UnsupportedOperationException("Not supported yet."); //To change body of generated methods, choose Tools | Templates.
+    public Calendar lastOfficiantWorkDate(Officiant officiant) throws NoSuchOfficiantException {
+        Calendar result = xmlTask.lastOfficiantWorkDate(officiant.getFirstName(), officiant.getSecondName());
+        if (result == null)
+            throw new NoSuchOfficiantException("Officiant not found: "+officiant.getFirstName()+" "+officiant.getSecondName());
+        else return result;
     }
-    
 }
