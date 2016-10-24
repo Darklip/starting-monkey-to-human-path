@@ -3,7 +3,12 @@ package RPIS41.Lipatkin.wdad.learn.xml;
 import java.io.File;
 import java.io.FileOutputStream;
 import java.io.IOException;
+import java.util.ArrayList;
 import java.util.Calendar;
+import java.util.List;
+import java.util.HashMap;
+import java.util.logging.Level;
+import java.util.logging.Logger;
 
 import javax.xml.parsers.DocumentBuilderFactory;
 import javax.xml.parsers.DocumentBuilder;
@@ -20,15 +25,17 @@ public class XmlTask {
     private Document document;
     private String path;
     
-    public XmlTask()
-            throws ParserConfigurationException, IOException, SAXException {
+    public XmlTask(){
         this("src/RPIS41/Lipatkin/wdad/learn/xml/newXMLDocument.xml");
     }
     
-    public XmlTask(String path)
-            throws ParserConfigurationException, IOException, SAXException {
+    public XmlTask(String path){
         this.path = path;
-        generateDocument();
+        try {
+            generateDocument();
+        } catch (ParserConfigurationException | IOException | SAXException ex) {
+            Logger.getLogger(XmlTask.class.getName()).log(Level.SEVERE, null, ex);
+        }
     }
     
     private void generateDocument()
@@ -161,6 +168,46 @@ public class XmlTask {
             }
         }
         updateDocument();
+    }
+    
+    public HashMap<HashMap, String> getOrdersItems(Calendar calendar) {
+        NodeList dateList = document.getElementsByTagName("date");
+        NamedNodeMap dateAttributes;
+        NodeList orderList, orderChildList;
+        //order
+        HashMap<HashMap, String> order = new HashMap<>();
+        String orderOfficiant = "";
+        HashMap<String, Integer> orderItems = new HashMap<>();
+        
+        for (int i = 0; i < dateList.getLength(); i++) {
+            dateAttributes = dateList.item(i).getAttributes();
+            if ((Integer.valueOf(dateAttributes.getNamedItem("day").getNodeValue()) == calendar.get(Calendar.DAY_OF_MONTH)) &&
+                    (Integer.valueOf(dateAttributes.getNamedItem("month").getNodeValue()) == (calendar.get(Calendar.MONTH)+1)) &&
+                    (Integer.valueOf(dateAttributes.getNamedItem("year").getNodeValue()) == calendar.get(Calendar.YEAR))) {
+                orderList = dateList.item(i).getChildNodes();
+                
+                for (int j = 0; j < orderList.getLength(); j++) {
+                    orderChildList = orderList.item(j).getChildNodes();
+                    orderItems.clear();
+                    orderOfficiant = "";
+                    
+                    for (int k = 0; k < orderChildList.getLength(); k++) {
+                        if (orderChildList.item(k).getNodeName().equals("officiant")) {
+                            orderOfficiant += orderChildList.item(k).getAttributes().getNamedItem("firstname").getTextContent() +
+                                    ' ' + orderChildList.item(k).getAttributes().getNamedItem("secondname").getTextContent();
+                        }
+                        if (orderChildList.item(k).getNodeName().equals("item")) {
+                            orderItems.put(
+                                    orderChildList.item(k).getAttributes().getNamedItem("name").getTextContent(), 
+                                    Integer.parseInt(orderChildList.item(k).getAttributes().getNamedItem("cost").getTextContent())
+                            );
+                        }
+                    }
+                    order.put((HashMap) orderItems.clone(), orderOfficiant);
+                }
+            }
+        }
+        return order;
     }
     
     public Calendar lastOfficiantWorkDate(String firstName, String secondName) {

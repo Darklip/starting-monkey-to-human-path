@@ -3,11 +3,12 @@ package RPIS41.Lipatkin.wdad.learn.rmi;
 import RPIS41.Lipatkin.wdad.learn.xml.XmlTask;
 
 import java.io.IOException;
+import java.rmi.RemoteException;
 import java.util.Calendar;
 import java.util.List;
 
 public class XmlDataManagerImpl implements XmlDataManager {
-    private XmlTask xmlTask;
+    private final XmlTask xmlTask = new XmlTask();
 
     @Override
     public int earningsTotal(Officiant officiant, Calendar calendar) {
@@ -27,7 +28,7 @@ public class XmlDataManagerImpl implements XmlDataManager {
 
     @Override
     public List<Order> getOrders(Calendar calendar) {
-        throw new UnsupportedOperationException("Not supported yet."); //To change body of generated methods, choose Tools | Templates.
+        throw new UnsupportedOperationException("Not supported yet.");
     }
 
     @Override
@@ -36,5 +37,10 @@ public class XmlDataManagerImpl implements XmlDataManager {
         if (result == null)
             throw new NoSuchOfficiantException("Officiant not found: "+officiant.getFirstName()+" "+officiant.getSecondName());
         else return result;
+    }
+
+    @Override
+    public String checkWork() throws RemoteException {
+        return "It works!!!";
     }
 }
