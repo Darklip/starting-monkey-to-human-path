@@ -65,9 +65,4 @@ public class XmlDataManagerImpl implements XmlDataManager {
             return result;
         }
     }
-
-    @Override
-    public String checkWork() throws RemoteException {
-        return "It works!!!";
-    }
 }

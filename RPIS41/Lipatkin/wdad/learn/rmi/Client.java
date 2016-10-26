@@ -46,7 +46,6 @@ public class Client {
             try {
                 XmlDataManager xdm = (XmlDataManager) registry.lookup(DATA_MANAGER_NAME);
                 calendar.setTime(sdf.parse("2-10-2016"));
-                System.out.println(xdm.checkWork());
                 xdm.changeOfficiantName(new Officiant("Василий", "petrov"), new Officiant("Михаил", "ivanov"));
                 System.out.println(xdm.earningsTotal(new Officiant("Михаил", "ivanov"), calendar));
                 calendar.setTime(sdf.parse("10-10-2016"));

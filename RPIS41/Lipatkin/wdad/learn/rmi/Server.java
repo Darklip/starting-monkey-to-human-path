@@ -27,7 +27,6 @@ public class Server {
         }
         System.setProperty("java.rmi.server.codebase", pm.getProperty(PreferencesConstantManager.CLASS_PROVIDER));
         System.setProperty("java.rmi.server.useCodebaseOnly", String.valueOf(pm.getProperty(PreferencesConstantManager.USE_CODE_BASE_ONLY)));
-        System.setProperty("java.rmi.server.logCalls", "true");
         System.setProperty("java.security.policy", pm.getProperty(PreferencesConstantManager.POLICY_PATH));
         Registry registry = null;
         try {

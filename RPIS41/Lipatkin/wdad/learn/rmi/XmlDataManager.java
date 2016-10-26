@@ -11,8 +11,6 @@ import java.util.List;
 
 public interface XmlDataManager extends Remote, Serializable {
     
-    public String checkWork() throws RemoteException;
-    
     public int earningsTotal(Officiant officiant, Calendar calendar) throws RemoteException;
     
     public void removeDay(Calendar calendar) throws IOException, RemoteException;
