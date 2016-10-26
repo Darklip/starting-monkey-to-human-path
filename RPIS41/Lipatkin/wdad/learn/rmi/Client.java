@@ -21,7 +21,7 @@ public class Client {
             pm = PreferencesManager.getInstance();
         } catch (ParserConfigurationException | IOException | SAXException ex) {
             System.err.println("appconfig.xml is damaged");
-            ex.getStackTrace();
+            ex.printStackTrace();
         }
         System.setProperty("java.rmi.server.codebase", pm.getClassProvider());
         System.setProperty("java.rmi.server.useCodebaseOnly", String.valueOf(pm.getUseCodeBaseOnly()));

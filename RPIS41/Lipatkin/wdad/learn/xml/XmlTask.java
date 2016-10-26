@@ -30,7 +30,7 @@ public class XmlTask {
         try {
             generateDocument();
         } catch (ParserConfigurationException | IOException | SAXException ex) {
-            ex.getStackTrace();
+            ex.printStackTrace();
         }
     }
     
@@ -194,8 +194,7 @@ public class XmlTask {
                         }
                         if (orderChildList.item(k).getNodeName().equals("item")) {
                             orderItems += 
-                                    orderChildList.item(k).getAttributes().getNamedItem("name").getTextContent() +
-                                    "%" +
+                                    orderChildList.item(k).getAttributes().getNamedItem("name").getTextContent() + "%" +
                                     orderChildList.item(k).getAttributes().getNamedItem("cost").getTextContent() + "##";
                         }
                     }
