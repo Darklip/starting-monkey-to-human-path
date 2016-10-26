@@ -1,19 +1,16 @@
 package RPIS41.Lipatkin.wdad.learn.rmi;
 
 import RPIS41.Lipatkin.wdad.data.managers.PreferencesManager;
-
 import java.io.IOException;
-import javax.xml.parsers.ParserConfigurationException;
 
 import java.rmi.NotBoundException;
 import java.rmi.RemoteException;
 import java.rmi.registry.LocateRegistry;
 import java.rmi.registry.Registry;
-import java.rmi.server.RMIClassLoader;
 
 import java.text.SimpleDateFormat;
 import java.util.Calendar;
-
+import javax.xml.parsers.ParserConfigurationException;
 import org.xml.sax.SAXException;
 
 public class Client {
@@ -22,8 +19,9 @@ public class Client {
     public static void main(String[] args) {
         try {
             pm = PreferencesManager.getInstance();
-        } catch (ParserConfigurationException | IOException | SAXException e) {
-            e.printStackTrace();
+        } catch (ParserConfigurationException | IOException | SAXException ex) {
+            System.err.println("appconfig.xml is damaged");
+            ex.getStackTrace();
         }
         System.setProperty("java.rmi.server.codebase", pm.getClassProvider());
         System.setProperty("java.rmi.server.useCodebaseOnly", String.valueOf(pm.getUseCodeBaseOnly()));
@@ -44,11 +42,13 @@ public class Client {
                 XmlDataManager xdm = (XmlDataManager) registry.lookup("XmlDataManager");
                 calendar.setTime(sdf.parse("2-10-2016"));
                 System.out.println(xdm.checkWork());
+                xdm.changeOfficiantName(new Officiant("Василий", "petrov"), new Officiant("Михаил", "ivanov"));
                 System.out.println(xdm.earningsTotal(new Officiant("Михаил", "ivanov"), calendar));
                 calendar.setTime(sdf.parse("10-10-2016"));
                 xdm.removeDay(calendar);
                 System.out.println(xdm.lastOfficiantWorkDate(new Officiant("Михаил", "ivanov")).toString());
-                xdm.changeOfficiantName(new Officiant("Василий", "petrov"), new Officiant("Михаил", "ivanov"));
+                calendar.setTime(sdf.parse("2-10-2016"));
+                xdm.getOrders(calendar);
             } catch (NotBoundException nbe) {
                 System.err.println("cant find object");
                 nbe.printStackTrace();

@@ -3,12 +3,8 @@ package RPIS41.Lipatkin.wdad.learn.xml;
 import java.io.File;
 import java.io.FileOutputStream;
 import java.io.IOException;
-import java.util.ArrayList;
 import java.util.Calendar;
-import java.util.List;
 import java.util.HashMap;
-import java.util.logging.Level;
-import java.util.logging.Logger;
 
 import javax.xml.parsers.DocumentBuilderFactory;
 import javax.xml.parsers.DocumentBuilder;
@@ -34,7 +30,7 @@ public class XmlTask {
         try {
             generateDocument();
         } catch (ParserConfigurationException | IOException | SAXException ex) {
-            Logger.getLogger(XmlTask.class.getName()).log(Level.SEVERE, null, ex);
+            ex.getStackTrace();
         }
     }
     
@@ -170,14 +166,14 @@ public class XmlTask {
         updateDocument();
     }
     
-    public HashMap<HashMap, String> getOrdersItems(Calendar calendar) {
+    public HashMap<String, String> getOrders(Calendar calendar) {
         NodeList dateList = document.getElementsByTagName("date");
         NamedNodeMap dateAttributes;
         NodeList orderList, orderChildList;
         //order
-        HashMap<HashMap, String> order = new HashMap<>();
-        String orderOfficiant = "";
-        HashMap<String, Integer> orderItems = new HashMap<>();
+        HashMap<String, String> order = new HashMap<>();
+        String orderOfficiant;
+        String orderItems;
         
         for (int i = 0; i < dateList.getLength(); i++) {
             dateAttributes = dateList.item(i).getAttributes();
@@ -188,7 +184,7 @@ public class XmlTask {
                 
                 for (int j = 0; j < orderList.getLength(); j++) {
                     orderChildList = orderList.item(j).getChildNodes();
-                    orderItems.clear();
+                    orderItems = "";
                     orderOfficiant = "";
                     
                     for (int k = 0; k < orderChildList.getLength(); k++) {
@@ -197,13 +193,13 @@ public class XmlTask {
                                     ' ' + orderChildList.item(k).getAttributes().getNamedItem("secondname").getTextContent();
                         }
                         if (orderChildList.item(k).getNodeName().equals("item")) {
-                            orderItems.put(
-                                    orderChildList.item(k).getAttributes().getNamedItem("name").getTextContent(), 
-                                    Integer.parseInt(orderChildList.item(k).getAttributes().getNamedItem("cost").getTextContent())
-                            );
+                            orderItems += 
+                                    orderChildList.item(k).getAttributes().getNamedItem("name").getTextContent() +
+                                    "%" +
+                                    orderChildList.item(k).getAttributes().getNamedItem("cost").getTextContent() + "##";
                         }
                     }
-                    order.put((HashMap) orderItems.clone(), orderOfficiant);
+                    order.put(orderItems, orderOfficiant);
                 }
             }
         }

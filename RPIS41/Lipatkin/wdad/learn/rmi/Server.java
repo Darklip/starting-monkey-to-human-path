@@ -1,16 +1,15 @@
 package RPIS41.Lipatkin.wdad.learn.rmi;
 
 import RPIS41.Lipatkin.wdad.data.managers.PreferencesManager;
-
 import java.io.IOException;
-
-import javax.xml.parsers.ParserConfigurationException;
-import org.xml.sax.SAXException;
 
 import java.rmi.RemoteException;
 import java.rmi.registry.LocateRegistry;
 import java.rmi.registry.Registry;
 import java.rmi.server.UnicastRemoteObject;
+
+import javax.xml.parsers.ParserConfigurationException;
+import org.xml.sax.SAXException;
 
 public class Server {
     static private PreferencesManager pm;
@@ -18,9 +17,9 @@ public class Server {
     public static void main(String[] args) {
         try {
             pm = PreferencesManager.getInstance();
-        } catch (ParserConfigurationException | IOException | SAXException e) {
-            System.err.println("cant get PreferencesManager instance");
-            e.printStackTrace();
+        } catch (ParserConfigurationException | IOException | SAXException ex) {
+            System.err.println("appconfig.xml is damaged");
+            ex.getStackTrace();
         }
         System.setProperty("java.rmi.server.codebase", pm.getClassProvider());
         System.setProperty("java.rmi.server.useCodebaseOnly", String.valueOf(pm.getUseCodeBaseOnly()));
