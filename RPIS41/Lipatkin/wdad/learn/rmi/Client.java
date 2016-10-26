@@ -1,7 +1,7 @@
 package RPIS41.Lipatkin.wdad.learn.rmi;
 
 import RPIS41.Lipatkin.wdad.data.managers.PreferencesManager;
-import java.io.IOException;
+import RPIS41.Lipatkin.wdad.utils.PreferencesConstantManager;
 
 import java.rmi.NotBoundException;
 import java.rmi.RemoteException;
@@ -10,11 +10,14 @@ import java.rmi.registry.Registry;
 
 import java.text.SimpleDateFormat;
 import java.util.Calendar;
+
 import javax.xml.parsers.ParserConfigurationException;
 import org.xml.sax.SAXException;
+import java.io.IOException;
 
 public class Client {
     static private PreferencesManager pm;
+    private static final String DATA_MANAGER_NAME = "XmlDataManager";
     
     public static void main(String[] args) {
         try {
@@ -23,23 +26,25 @@ public class Client {
             System.err.println("appconfig.xml is damaged");
             ex.printStackTrace();
         }
-        System.setProperty("java.rmi.server.codebase", pm.getClassProvider());
-        System.setProperty("java.rmi.server.useCodebaseOnly", String.valueOf(pm.getUseCodeBaseOnly()));
-        System.setProperty("java.security.policy", pm.getPolicyPath());
-        //System.setSecurityManager(new SecurityManager());
+        System.setProperty("java.rmi.server.codebase", pm.getProperty(PreferencesConstantManager.CLASS_PROVIDER));
+        System.setProperty("java.rmi.server.useCodebaseOnly", String.valueOf(pm.getProperty(PreferencesConstantManager.USE_CODE_BASE_ONLY)));
+        System.setProperty("java.security.policy", pm.getProperty(PreferencesConstantManager.POLICY_PATH));
         
         Calendar calendar = Calendar.getInstance();
         SimpleDateFormat sdf = new SimpleDateFormat("dd-MM-yyyy");
         Registry registry = null;
         try {
-            registry = LocateRegistry.getRegistry(pm.getRegistryAddress(), pm.getRegistryPort());
+            registry = LocateRegistry.getRegistry(
+                        pm.getProperty(PreferencesConstantManager.REGISTRY_ADDRESS), 
+                        Integer.parseInt(pm.getProperty(PreferencesConstantManager.REGISTRY_PORT))
+            );
         } catch (RemoteException re) {
-            System.err.println("cant locate registry");
+            System.err.println("Cant locate registry");
             re.printStackTrace();
         }
         if (registry != null) {
             try {
-                XmlDataManager xdm = (XmlDataManager) registry.lookup("XmlDataManager");
+                XmlDataManager xdm = (XmlDataManager) registry.lookup(DATA_MANAGER_NAME);
                 calendar.setTime(sdf.parse("2-10-2016"));
                 System.out.println(xdm.checkWork());
                 xdm.changeOfficiantName(new Officiant("Василий", "petrov"), new Officiant("Михаил", "ivanov"));
@@ -50,13 +55,13 @@ public class Client {
                 calendar.setTime(sdf.parse("2-10-2016"));
                 xdm.getOrders(calendar);
             } catch (NotBoundException nbe) {
-                System.err.println("cant find object");
+                System.err.println("Cant find object");
                 nbe.printStackTrace();
             } catch (RemoteException re) {
-                System.err.println("something unbelievable happens");
+                System.err.println("Cant execute RMI");
                 re.printStackTrace();
             } catch (Exception e) {
-                System.err.println("user input error");
+                System.err.println("User input error");
                 e.printStackTrace();
             }
         }
