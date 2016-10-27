@@ -9,6 +9,9 @@ import java.rmi.registry.Registry;
 import java.rmi.server.UnicastRemoteObject;
 
 import java.io.IOException;
+import java.rmi.AccessException;
+import java.rmi.NotBoundException;
+import java.util.Scanner;
 import javax.xml.parsers.ParserConfigurationException;
 import org.xml.sax.SAXException;
 
@@ -28,6 +31,7 @@ public class Server {
         System.setProperty("java.rmi.server.codebase", pm.getProperty(PreferencesConstantManager.CLASS_PROVIDER));
         System.setProperty("java.rmi.server.useCodebaseOnly", String.valueOf(pm.getProperty(PreferencesConstantManager.USE_CODE_BASE_ONLY)));
         System.setProperty("java.security.policy", pm.getProperty(PreferencesConstantManager.POLICY_PATH));
+        System.setProperty("java.rmi.server.logCalls", "true");
         Registry registry = null;
         try {
             if (pm.getCreateRegistry()) {
@@ -49,7 +53,24 @@ public class Server {
                 UnicastRemoteObject.exportObject(xdmi, DATA_MANAGER_PORT);
                 registry.rebind(DATA_MANAGER_NAME, xdmi);
                 pm.addBindedObject(DATA_MANAGER_NAME, DATA_MANAGER_PATH);
-                System.out.println("Idling");
+                System.out.println("Idling... Type \"exit\" to close the server");
+                Scanner sc = new Scanner(System.in);
+                String command;
+                while (true) {
+                    command = sc.nextLine();
+                    if (command.equals("exit")) {
+                        try {
+                            registry.unbind(DATA_MANAGER_NAME);
+                            pm.removeBindedObject(DATA_MANAGER_NAME);
+                            System.exit(0);
+                        } catch (NotBoundException | AccessException ex) {
+                            ex.printStackTrace();
+                        }
+                    }
+                    else {
+                        System.out.println("Unknown command: "+command);
+                    }
+                }
             } catch (RemoteException re) {
                 System.err.println("Cant export or bind object");
                 re.printStackTrace();
