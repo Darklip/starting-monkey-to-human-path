@@ -35,13 +35,14 @@ public class XmlDataManagerImpl implements XmlDataManager {
         HashMap<String, String> orderMap = xmlTask.getOrders(calendar);
         List<Order> orderList = new ArrayList<>();
         Officiant officiant;
-        List<Item> itemList = new ArrayList<>();
+        ArrayList<Item> itemList;
         String[] splitter, itemsSplitter;
 
         for (Map.Entry<String, String> entry : orderMap.entrySet()) {
             String key = entry.getKey();
             String value = entry.getValue();
             if ("".equals(key)) continue;
+            itemList = new ArrayList<>();
             
             splitter = value.split(" ");
             officiant = new Officiant(splitter[0], splitter[1]);
@@ -51,7 +52,7 @@ public class XmlDataManagerImpl implements XmlDataManager {
                 splitter = itemsSplitter[i].split("%");
                 itemList.add(new Item(splitter[0], Integer.parseInt(splitter[1])));
             }
-            orderList.add(new Order(officiant, itemList));
+            orderList.add(new Order(officiant, (List<Item>) itemList.clone()));
         }
         return orderList;
     }
