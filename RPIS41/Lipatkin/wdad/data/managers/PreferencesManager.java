@@ -87,7 +87,6 @@ public class PreferencesManager {
         String key, value;
         XPath xPath = XPathFactory.newInstance().newXPath();
         String expression = "//*[not(*)]";  // http://stackoverflow.com/questions/3926589/how-to-select-all-leaf-nodes-using-xpath-expression
-        
         try {
             NodeList nodeList = (NodeList) xPath.compile(expression).evaluate(document, XPathConstants.NODESET);
             
