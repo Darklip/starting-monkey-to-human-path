@@ -16,6 +16,12 @@ import org.w3c.dom.ls.LSOutput;
 import org.w3c.dom.ls.LSSerializer;
 import org.xml.sax.SAXException;
 
+import RPIS41.Lipatkin.wdad.learn.rmi.Item;
+import RPIS41.Lipatkin.wdad.learn.rmi.Officiant;
+import RPIS41.Lipatkin.wdad.learn.rmi.Order;
+import java.util.ArrayList;
+import java.util.List;
+
 public class XmlTask {
     
     private Document document;
@@ -166,14 +172,14 @@ public class XmlTask {
         updateDocument();
     }
     
-    public HashMap<String, String> getOrders(Calendar calendar) {
+    public ArrayList<Order> getOrders(Calendar calendar) {
         NodeList dateList = document.getElementsByTagName("date");
         NamedNodeMap dateAttributes;
         NodeList orderList, orderChildList;
         //order
-        HashMap<String, String> order = new HashMap<>();
-        String orderOfficiant;
-        String orderItems;
+        ArrayList<Order> orders = new ArrayList<>();
+        Officiant officiant = null;
+        ArrayList<Item> orderItems = new ArrayList<>();
         
         for (int i = 0; i < dateList.getLength(); i++) {
             dateAttributes = dateList.item(i).getAttributes();
@@ -184,25 +190,26 @@ public class XmlTask {
                 
                 for (int j = 0; j < orderList.getLength(); j++) {
                     orderChildList = orderList.item(j).getChildNodes();
-                    orderItems = "";
-                    orderOfficiant = "";
-                    
                     for (int k = 0; k < orderChildList.getLength(); k++) {
                         if (orderChildList.item(k).getNodeName().equals("officiant")) {
-                            orderOfficiant += orderChildList.item(k).getAttributes().getNamedItem("firstname").getTextContent() +
-                                    ' ' + orderChildList.item(k).getAttributes().getNamedItem("secondname").getTextContent();
+                            officiant = new Officiant(
+                                    orderChildList.item(k).getAttributes().getNamedItem("firstname").getTextContent(), 
+                                    orderChildList.item(k).getAttributes().getNamedItem("secondname").getTextContent()
+                            );
                         }
                         if (orderChildList.item(k).getNodeName().equals("item")) {
-                            orderItems += 
-                                    orderChildList.item(k).getAttributes().getNamedItem("name").getTextContent() + "%" +
-                                    orderChildList.item(k).getAttributes().getNamedItem("cost").getTextContent() + "##";
+                            orderItems.add(new Item(
+                                    orderChildList.item(k).getAttributes().getNamedItem("name").getTextContent(),
+                                    Integer.parseInt(orderChildList.item(k).getAttributes().getNamedItem("cost").getTextContent())
+                            ));
                         }
                     }
-                    order.put(orderItems, orderOfficiant);
+                    orders.add(new Order(officiant, (List<Item>) orderItems.clone()));
+                    orderItems.clear();
                 }
             }
         }
-        return order;
+        return orders;
     }
     
     public Calendar lastOfficiantWorkDate(String firstName, String secondName) {

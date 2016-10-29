@@ -32,29 +32,7 @@ public class XmlDataManagerImpl implements XmlDataManager {
 
     @Override
     public List<Order> getOrders(Calendar calendar) {
-        HashMap<String, String> orderMap = xmlTask.getOrders(calendar);
-        List<Order> orderList = new ArrayList<>();
-        Officiant officiant;
-        ArrayList<Item> itemList;
-        String[] splitter, itemsSplitter;
-
-        for (Map.Entry<String, String> entry : orderMap.entrySet()) {
-            String key = entry.getKey();
-            String value = entry.getValue();
-            if ("".equals(key)) continue;
-            itemList = new ArrayList<>();
-            
-            splitter = value.split(" ");
-            officiant = new Officiant(splitter[0], splitter[1]);
-            
-            itemsSplitter = key.split("##");
-            for (int i = 0; i < itemsSplitter.length; i++) {
-                splitter = itemsSplitter[i].split("%");
-                itemList.add(new Item(splitter[0], Integer.parseInt(splitter[1])));
-            }
-            orderList.add(new Order(officiant, (List<Item>) itemList.clone()));
-        }
-        return orderList;
+        return xmlTask.getOrders(calendar);
     }
 
     @Override
